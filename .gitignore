@@ -1,2 +1,3 @@
 *.o
 cora_test
+.vscode

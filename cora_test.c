@@ -2,20 +2,21 @@
 #include "cora.h"
 
 int main() {
-    Display* display = XOpenDisplay(NULL);
-    Window w = XCreateSimpleWindow(display, DefaultRootWindow(display), 50, 50, 250, 250, 1, BlackPixel(display, 0), WhitePixel(display, 0));
-    XMapWindow(display, w);
+    cora_window_t* window = cora_create_window("Hello window", 800, 600);
 
-    XSelectInput(display, w, ExposureMask);
-
-    for (;;) {
-        XEvent event;
-        XNextEvent(display, &event);
-
-        if (event.type == Expose) {
-            XDrawString(display, w, DefaultGC(display, 0), 100, 100, "Thanks for Watching!", 20);
+    int window_open = 1;
+    while (window_open) {
+        cora_event_t event;
+        
+        while(cora_pool_event(&event) > 0) {
+            if(event.type == CORA_QUIT) {
+                window_open = 0;
+                break;
+            }
         }
     }
+
+    cora_destroy_window(window);
 
     return 0;
 }
